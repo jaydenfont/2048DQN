@@ -4,3 +4,6 @@ A Deep Q Network that plays the video game "2048". Implements OpenAI Gym and Sel
 Two different policies are implemented for this agent. Initially, an epsilon greedy policy was used for action selection. However, the agent would learn to repeatedly hit one button and would not move. A Boltzmann policy was implemented next, and has more success learning strategies and avoiding getting stuck.
 
 More work is needed, but eventually the agent will learn to successfully beat the game. 
+
+Below are the results of 20 games between the best agent against an agent that generates random moves
+![Performance](https://github.com/jaydenfont/2048DQN/blob/master/random_vs_model_2020-08-14%2015:17:23.823625.png)
