@@ -7,7 +7,11 @@ __pycache__/
 *.so
 
 # Old Model Versions
+<<<<<<< HEAD
 Other Models/
+=======
+Other_Models/
+>>>>>>> 6322ef5a679793120dc6fd5b1ffde20648577f02
 
 # Unused Files
 dqn_keras_rl.py
