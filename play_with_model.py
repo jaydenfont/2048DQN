@@ -21,7 +21,7 @@ def load():
 
 
 def play(env, dqn):
-    stuck_count = 0
+     # stuck_count = 0
     while env.game_is_over() == False:
         current_state = env.get_board(0)
         action = dqn.determine_action_boltz(current_state)
