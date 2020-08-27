@@ -7,7 +7,7 @@ __pycache__/
 *.so
 
 # Old Model Versions
-Other Models/
+Other_Models/
 
 # Unused Files
 dqn_keras_rl.py
