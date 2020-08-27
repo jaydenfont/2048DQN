@@ -11,7 +11,7 @@ Allows user to let model play a game
 def load():
     cwd = os.getcwd()
     model = tf.keras.models.load_model(
-        f'/{cwd}/Best Model/boltzmann_1dot2_sidetendency.hd5f')
+        f'/{cwd}/Best_Model/boltzmann_1dot2_sidetendency.hd5f')
     env = gameenv.GameEnv()
     dqn = custom_dqn.DQN(env, 'm')
     dqn.load_model(model)

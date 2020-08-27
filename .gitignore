@@ -6,6 +6,14 @@ __pycache__/
 # C extensions
 *.so
 
+# Old Model Versions
+Other Models/
+
+# Unused Files
+dqn_keras_rl.py
+driver_test.py
+chromedriver.exec
+
 # Distribution / packaging
 .Python
 build/
