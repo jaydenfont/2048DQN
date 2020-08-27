@@ -14,6 +14,12 @@ dqn_keras_rl.py
 driver_test.py
 chromedriver
 
+# Gitignore Backups
+.gitignore_BACKUP_32664
+.gitignore_BASE_32664
+.gitignore_LOCAL_32664
+.gitignore_REMOTE_32664
+
 # Distribution / packaging
 .Python
 build/
