@@ -41,20 +41,6 @@ def main():
     env2.close()
 
     # plot results
-    '''
-    x_axis_1 = [i - .25 for i in range(n_games)]
-    x_axis_2 = [i + .25 for i in range(n_games)]
-
-    fig = plt.figure(figsize=(5, 5))
-    ax = fig.add_subplot()
-    ax.bar(x_axis_1, random_game_scores, width=0.2, color='r', label='Random')
-    ax.bar(x_axis_2, model_scores, width=0.2, color='b', label='Agent')
-    ax.set_xticks([i for i in range(n_games)]);
-    ax.legend(loc='upper right')
-    ax.set_title('Random vs. Agent Performance')
-    ax.set_xlabel("Games")
-    ax.set_ylabel('Scores')
-    '''
     x_axis = [i for i in range(n_games)]
     fig = plt.figure()
     ax = fig.add_subplot()

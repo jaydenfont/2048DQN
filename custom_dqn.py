@@ -13,7 +13,7 @@ from matplotlib import pyplot as plt
 
 
 # TODO try normalizing matrix, comparing with random play, implementing logger, using keras-rl, using colab
-# 1.0 tau to 1.20 to 1.15
+# 1.0 tau to 1.20 to 1.15 to 1.1
 
 class DQN:
 
@@ -75,7 +75,7 @@ class DQN:
     def add_to_memory(self, current_state, action, reward, new_state, episode_over):
         self.memory.append([current_state, action, reward, new_state, episode_over])
 
-    # Epsilon Greedy
+    # Epsilon Greedy - always picks highest Q Value
     def determine_action_epsilon(self, obs):
         # use epsilon to choose random move
         self.epsilon *= self.epsilon_decay  # adjust exploring ratio
@@ -92,7 +92,7 @@ class DQN:
         print(f"Q Values: {q_val}")
         return np.argmax(q_val)
 
-    # Boltzmann/Softmax
+    # Boltzmann/Softmax - uses Q values to determine probabilities and chooses from those
     def determine_action_boltz(self, obs):
         #obs = obs.reshape(1, 4, 4, 1)  # have to reshape board for CNN
         q_val = self.model.predict(obs)[0]
@@ -119,32 +119,33 @@ class DQN:
         print('custom prob')
         return np.random.choice(a=4, p=p)
 
-    # use network only to predict moves
+    # use network only to predict moves (Epsilon greedy)
     def predict(self, obs):
         print('predicted move')
         #obs = obs.reshape(1, 4, 4, 1)  # have to reshape board for CNN
         return np.argmax(self.model.predict(obs)[0])
 
-    # train on sample boards from memory with training network
+    # generate a set of samples from previous trials and train model on them
     def train(self):
         if len(self.memory) < self.batch_size*2:
             return
-        samples = random.sample(self.memory, self.batch_size)
-        print("Fitting model...")
 
-        # Take all samples and place into pandas dataframes
+        samples = random.sample(self.memory, self.batch_size)
+        print("Choosing samples...")
+
+        # Take all samples, use target to predict the next move, and add to list
         states = []
         targets = []
         for sample in samples:
             current_state, action, reward, new_state, episode_over = sample
             #current_state = current_state.reshape(1, 4, 4, 1)  # have to reshape board for CNN
-            target = self.training_model.predict(current_state)  # training network predicts the Q values
+            target = self.training_model.predict(current_state)  # training network predicts Q values on current board
 
-            # if game is over, no need to update q for future rewards
+            # if game is over, no need to predict future moves
             if episode_over:
                 target[0][action] = reward
 
-            # otherwise, update q values for future rewards
+            # otherwise, use target net to predict the next move and reward, and add it to list
             else:
                 #new_state = new_state.reshape(1, 4, 4, 1) # reshape for CNN
                 q_next = max(self.training_model.predict(new_state)[0])
@@ -153,14 +154,16 @@ class DQN:
             states.append(current_state)
             targets.append(target)
 
+        # placing values into dataframe makes it easier to send data in bulk to model for fitting
         states = pd.DataFrame(np.row_stack(states))
         targets = pd.DataFrame(np.row_stack(targets))
 
+        print("Fitting Model...")
         self.model.fit(states, targets, epochs=20, verbose=1)  # fit main network to predicted Q values
         self.learning_rate *= self.learning_rate_decay
         print('model has been fitted')
 
-    # update training model
+    # update training model with weights from main model
     def target_train(self):
         if len(self.memory) < self.batch_size*2:
             return
@@ -221,12 +224,12 @@ def main():
                 dqn.add_to_memory(current_state, action, reward, new_state, episode_over)
                 current_state = new_state
 
-                '''
+
                 # to prevent from getting stuck, keep selecting until a different move is chosen
                 if reward == -1:  # try making this a while loop
-                    dqn.prevent_stuck(current_state, action, reward, new_state, episode_over)
+                    dqn.prevent_stuck(current_state, action)
                     move += 1
-                '''
+
 
                 print('--------------------------------------------')
                 if episode_over:
@@ -270,22 +273,3 @@ def main():
 if __name__ == '__main__':
     [plt, dqn] = main()
 
-'''
-# get reward, if 15 negative rewards in a row (meaning its stuck on one button), break
-                if reward == -2 or reward == -1:
-                    negative_rewards += 1
-                    reward *= negative_rewards
-                else:
-                    negative_rewards = 0
-                if negative_rewards == 15 and env.get_score() != 0:
-                    reward = -10000 * 1/env.get_score()
-                    print(f'adjusted reward: {reward}')
-                    dqn.add_to_memory(current_state, action, reward, new_state, episode_over)
-                    break
-            original network: 4 deep layers, 16, 256, 256, 4 
-            model.add(Dense(16, activation='relu'))
-            model.add(Dense(256, activation='relu'))
-            model.add(Dense(256, activation='relu'))
-            model.add(Dense(4, activation='softmax'))
-            mse, adam
-'''
