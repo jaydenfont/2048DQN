@@ -6,4 +6,4 @@ Two different policies are implemented for this agent. Initially, an epsilon gre
 More work is needed, but eventually the agent will learn to successfully beat the game. 
 
 Below are the results of 20 games between the best agent against an agent that generates random moves
-![Performance](https://github.com/jaydenfont/2048DQN/blob/master/random_vs_model_2020-08-14%2015:17:23.823625.png)
+![Performance](https://github.com/jaydenfont/2048DQN/blob/master/Best_Model/current_best.png)
