@@ -30,7 +30,7 @@ def main():
 
     # test random game
     env1 = gameenv.GameEnv()
-    n_games = 5
+    n_games = 10
     random_game_scores = test_random_moves(env1, n_games)
     env1.close()
 

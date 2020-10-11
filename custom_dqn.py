@@ -26,7 +26,7 @@ class DQN:
         self.epsilon_decay = 0.999  # as time goes on, experiment less and stick to familiar strategies
         self.learning_rate = 0.00025  # how drastic the changes are when learning
         self.learning_rate_decay = 0.999
-        self.tau = 1.2  # adjusts exploration for boltzmann policy, lower values act more greedily
+        self.tau = 1  # adjusts exploration for boltzmann policy, lower values act more greedily
         self.batch_size = 256
 
         if model_type == 'c':

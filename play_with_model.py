@@ -27,12 +27,14 @@ def load():
     # side tendency model, set tau as 1.2
     model = tf.keras.models.load_model(
         f'/{cwd}/Best_Model/boltzmann_1dot2_sidetendency.hd5f')
+    print("side tendency")
 
 
 
     # corner tendency model, set tau as 1
     model = tf.keras.models.load_model(
         f'/{cwd}/Best_Model/boltzmann_tau1_corner_tendency.hd5f')
+    print("corner tendency")
 
     env = gameenv.GameEnv()
     dqn = custom_dqn.DQN(env, 'm')
@@ -50,16 +52,17 @@ def play(env, dqn):
         [new_state, reward, episode_over] = env.step(action)
         print(f'reward: {reward}')
 
-        '''
+
         # prevent from getting stuck by using lowest Q Value to pick move
         if reward == -1:
             stuck_count += 1
-            if stuck_count >= 5:
+            if stuck_count >= 20:
                 action, q_vals = dqn.determine_action_argmin(current_state)
                 new_state = env.step(action)
                 print('used argmin')
                 stuck_count = 0
-        '''
+
+    print(env.get_score())
     return env.get_score()
 
 

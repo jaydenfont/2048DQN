@@ -45,9 +45,9 @@ class GameEnv(gym.Env):  # custom gym environment for 2048 from OpenAI interface
         episode_over = self.game_is_over()
         if episode_over:
             if self.game_won():
-                reward = 5  # self.get_score() * 0.5  # higher score = higher reward
+                reward = 5  # higher score = higher reward
             else:
-                reward = -3  # 1/self.get_score() * -100000  # lower score = lower reward
+                reward = -3  # lower score = lower reward
         obs = self.get_board(0)
 
         # increase reward if the largest piece is in a corner, penalize if not
@@ -89,7 +89,6 @@ class GameEnv(gym.Env):  # custom gym environment for 2048 from OpenAI interface
             return 0
 
     # pull the increase in the score after two blocks merge from HTML code
-
     def get_score_increase(self):
         try:
             inc = self.driver.find_element_by_xpath('/html/body/div[2]/div[1]/div/div[1]/div')
@@ -102,14 +101,13 @@ class GameEnv(gym.Env):  # custom gym environment for 2048 from OpenAI interface
     # gets the current position of all visible tiles on the board
     def get_board(self, wait_time):
         self.driver.implicitly_wait(wait_time)
-        board = np.zeros(shape=(4, 4))
+        board = np.zeros(shape=(4, 4))  # initialize grid as 0
         for tile in range(1, 17):
-            try:
+            try:  # if the tile has a block, get its value and position and add to board
                 class_name = self.find_class_name(tile)
                 [val, row, col] = self.get_class_values(class_name)
-                # print(f'row={row}, col={col}')
                 board[row][col] = val
-            except (NoSuchElementException, StaleElementReferenceException):
+            except (NoSuchElementException, StaleElementReferenceException):  # if not, pass and leave as 0
                 pass
         return board
 
@@ -182,19 +180,19 @@ class GameEnv(gym.Env):  # custom gym environment for 2048 from OpenAI interface
             f'/html/body/div[2]/div[3]/div[3]/div[{tile}]')
         return item.get_attribute("class")
 
-    # takes class name and finds the value and position of its tile
+    # takes class name and finds the value and position of its tile from that
     @staticmethod
     def get_class_values(class_name):
         important_values = []
         for char in class_name:
-            if char.isdigit():
+            if char.isdigit():  # if character is numerical, it is either the row, col, or val
                 important_values.append(char)
             else:
                 continue
-        col = important_values[-2]
-        row = important_values[-1]
-        value = important_values[:-2]
-        value = ''.join(value)
+        col = important_values[-2]  # second to last value in list is the column
+        row = important_values[-1]  # last value in list is the row
+        value = important_values[:-2]  # all values before important_values[-2] are the value of the block
+        value = ''.join(value)  # concatenate digits in value
         return int(value), int(row) - 1, int(col)-1
 
 
